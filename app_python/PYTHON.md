@@ -10,7 +10,7 @@
 
 ## My unit tests
 
-Since my application is very simple, I tested just if response from request to main page is 200 (STATUS 200 OK).
+Since my application is very simple, I tested just if response from request to main page is 200 (`STATUS 200 OK`).
 
 ## Best practices for Python testing
 
