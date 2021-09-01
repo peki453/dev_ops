@@ -5,6 +5,8 @@ Student email: **m.pezer@innopolis.university** <br>
 Student Telegram: **@marko453** <br>
 Student group: **BS18-SE-01** 
 
+If you have any questions, feel free to contact me at any time.
+
 ## Lab 1: Python App
 
 For my simple app I have used Python and FastAPI.
