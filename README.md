@@ -49,6 +49,6 @@ You can find more about Terraform best practices in `TF.md` file.
 
 - [Terraform](https://www.terraform.io/)
 
-## Lab 5
+## Lab 5: Continuous Delivery (CD)
 
 ## Lab 6
