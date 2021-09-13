@@ -11,6 +11,16 @@ If you have any questions, feel free to contact me at any time.
 
 For my simple app I have used Python and FastAPI.
 
+To install FastAPI use `pip install fastapi`.
+
+To install and run my application use following commands:
+
+```
+git clone https://github.com/peki453/dev_ops.git
+cd app_python/app
+uvicorn index:app --reload 
+```
+
 You can find more about Python best practices in `PYTHON.md` file. 
 
 **References:**
@@ -34,6 +44,13 @@ Third lab was about Unit Testing and Continuous Integration (CI).
 
 Since my application is very simple, I tested just if response from request to main page is 200 (`STATUS 200 OK`).
 
+For unit testing use following comands:
+
+```
+cd app_python/app
+pytest unit_tests.py
+```
+
 You can find more about CI and Jenkins best practices in `CI.md` file. 
 Moreover, in `PYTHON.md` file you can find list of best practices for Python Unit Testing.
 
@@ -50,7 +67,3 @@ You can find more about Terraform best practices in `TF.md` file.
 **References:**
 
 - [Terraform](https://www.terraform.io/)
-
-## Lab 5: Continuous Delivery (CD)
-
-## Lab 6
