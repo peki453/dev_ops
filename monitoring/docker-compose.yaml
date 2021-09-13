@@ -1,0 +1,108 @@
+version: '2.4'
+
+networks:
+  loki:
+
+
+  services:
+    web_app:
+      image: marko453/devops:${TAG:-latest}
+      container_name: web_app
+      ports:
+        - "5000:5000"
+      networks:
+        - loki
+      expose:
+        - 5000
+      volumes:
+        - /var/run/docker.sock:/tmp/docker.sock:ro
+      logging:
+        driver: "json-file"
+        options:
+          max-size: "100m"
+          max-file: "5"
+          tag: "{{.ImageName}}|{{.Name}}"
+
+
+    grafana:
+      image: grafana/grafana:${GRAFANA_VERSION}
+      expose:
+        - 3000
+      ports:
+        - "3000:3000"
+      networks:
+        - loki
+      logging:
+        driver: "json-file"
+        options:
+          max-size: "30m"
+          max-file: "5"
+          tag: "{{.ImageName}}|{{.Name}}"
+      labels:
+        org.label-schema.group: "monitoring"
+
+    promtail:
+      image: grafana/promtail:${LOKI_VERSION}
+      container_name: monitoring.promtail
+      expose:
+        - 9080
+      ports:
+        - "9080:9080"
+      volumes:
+        - /var/lib/docker/containers:/var/lib/docker/containers:ro
+        - ./promtail/promtail.yml:/etc/promtail/promtail.yml
+      command: -config.file=/etc/promtail/promtail.yml
+      networks:
+        - loki
+      logging:
+        driver: "json-file"
+        options:
+          max-size: "30m"
+          max-file: "5"
+          tag: "{{.ImageName}}|{{.Name}}"
+      labels:
+        org.label-schema.group: "monitoring"
+
+
+    loki:
+      container_name: monitoring.loki
+      image: grafana/loki:${LOKI_VERSION}
+      expose:
+        - 3100
+      ports:
+        - "3100:3100"
+      volumes:
+        - ./loki/loki-config.yml:/etc/loki-config.yml
+      command: -config.file=/etc/loki-config.yml
+      networks:
+        - loki
+      logging:
+        driver: "json-file"
+        options:
+          max-size: "30m"
+          max-file: "5"
+          tag: "{{.ImageName}}|{{.Name}}"
+      labels:
+        org.label-schema.group: "monitoring"
+
+
+    prometheus:
+      container_name: prometheus
+      image: prom/prometheus:${PROMETHEUS_VERSION}
+      ports:
+        - 9090:9090
+      command: --config.file=/etc/prometheus/prometheus.yml
+      volumes:
+        - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      networks:
+        - loki
+      logging:
+        driver: "json-file"
+        options:
+          max-size: "30m"
+          max-file: "5"
+          tag: "{{.ImageName}}|{{.Name}}"
+
+
+
+          
