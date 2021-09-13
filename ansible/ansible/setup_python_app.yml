@@ -1,0 +1,17 @@
+---
+  - hosts: all
+  # remote_user: ubuntu
+    vars:
+      username: ubuntu
+      docker_hub_app_tag: latest
+
+    roles:
+      - role: docker_install
+        become: true
+        vars:
+          docker_users:
+            - "{{ username }}"
+      - role: app_python_install
+        python_app_tag: "{{ docker_hub_app_tag }}"
+
+

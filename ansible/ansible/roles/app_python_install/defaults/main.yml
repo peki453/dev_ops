@@ -1,0 +1,3 @@
+python_app_tag: latest
+python_app_outer_port: 5000
+docker_restart_handler_state: restarted
