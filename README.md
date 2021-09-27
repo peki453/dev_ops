@@ -70,6 +70,9 @@ You can find more about Terraform best practices in `TF.md` file.
 
 ## Labs 9&10
 
-Look at 'k8s/README.md'.
+Look at `k8s/README.md`.
 
+## Labs 11&12
+
+Look at `k8s/LAB11.md` and `k8s/LAB12.md`.
 
