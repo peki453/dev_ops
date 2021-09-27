@@ -2,7 +2,7 @@
 
 ## Lab 9:
 
-![image_1](images/K8S.png)
+![image_1](https://github.com/peki453/dev_ops/blob/main/k8s/images/K8S.PNG?raw=true)
 
 ![image_2](images/replicas.png)
 
