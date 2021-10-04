@@ -1,23 +1,23 @@
   apiVersion: apps/v1
   kind: Deployment
   metadata:
-    name: time-app-deployment
+    name: devops-workflow-deployment
     labels:
-      app: time_app
+      app: devops-workflow
   spec:
     replicas: 3
     selector:
       matchLabels:
-        app: time_app
+        app: devops-workflow
     template:
       metadata:
         labels:
-          app: time_app
+          app: devops-workflow
       spec:
         containers:
         - name: moscow-time
           image: marko453/devops:latest
           ports:
-          - containerPort: 5000
+          - containerPort: 8000
 
 
