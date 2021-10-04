@@ -1,0 +1,98 @@
+
+  apiVersion: apps/v1
+  kind: StatefulSet
+  metadata:
+    name: {{ include "devops-workflow.fullname" . }}
+    labels:
+      {{- include "devops-workflow.labels" . | nindent 4 }}
+  spec:
+    {{- if not .Values.autoscaling.enabled }}
+    replicas: {{ .Values.replicaCount }}
+    {{- end }}
+    selector:
+      matchLabels:
+        {{- include "devops-workflow.selectorLabels" . | nindent 6 }}
+    serviceName: {{ include "devops-workflow.fullname" . }}
+    podManagementPolicy: {{ .Values.statefulSet.podManagementPolicy }}
+    template:
+      metadata:
+        {{- with .Values.podAnnotations }}
+        annotations:
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
+        labels:
+          {{- include "devops-workflow.selectorLabels" . | nindent 8 }}
+      spec:
+        {{- with .Values.imagePullSecrets }}
+        imagePullSecrets:
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
+        serviceAccountName: {{ include "devops-workflow.serviceAccountName" . }}
+        securityContext:
+          {{- toYaml .Values.podSecurityContext | nindent 8 }}
+        initContainers:
+          - name: install
+            image: busybox
+            command:
+              - wget
+              - "-O"
+              - "/downloads/index.html"
+              - http://info.cern.ch
+            volumeMounts:
+              - name: downloads
+                mountPath: {{ .Values.downloadsFolder }}
+        containers:
+          - name: {{ .Chart.Name }}
+            securityContext:
+              {{- toYaml .Values.securityContext | nindent 12 }}
+            image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+            imagePullPolicy: {{ .Values.image.pullPolicy }}
+            ports:
+              - name: http
+                containerPort: 8000
+                protocol: TCP
+            livenessProbe:
+              httpGet:
+                path: /time
+                port: http
+            readinessProbe:
+              httpGet:
+                path: /time
+                port: http
+            resources:
+              {{- toYaml .Values.resources | nindent 12 }}
+            volumeMounts:
+              - name: config
+                mountPath: /mnt
+                readOnly: {{ .Values.readOnlyConfig }}
+              - name: visits
+                mountPath: {{ .Values.visitsPath }}
+              - name: downloads
+                mountPath: {{ .Values.downloadsFolder }}
+        dnsPolicy: Default
+        volumes:
+          - name: config
+            configMap:
+              name: {{ include "devops-workflow.fullname" . }}
+          - name: downloads
+            emptyDir: {}
+        {{- with .Values.nodeSelector }}
+        nodeSelector:
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- with .Values.affinity }}
+        affinity:
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- with .Values.tolerations }}
+        tolerations:
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
+    volumeClaimTemplates:
+      - metadata:
+          name: visits
+        spec:
+          {{- toYaml .Values.statefulSet.volumeClaimTemplates.spec | nindent 8}}
+
+
+          
